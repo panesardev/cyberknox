@@ -9,6 +9,7 @@ import { API_URL } from '../../app.constants';
 })
 export default class IndexComponent {
 
+  
   ngOnInit(): void {
     console.log(API_URL);
   }
