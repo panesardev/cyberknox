@@ -18,12 +18,17 @@ export class App {
     this.express.use('/', new IndexController().router);
   }
 
+  private async initializeDatabase() {
+
+  }
+
   getExpress() {
     this.express.use(compression());
     this.express.use(cors());
     this.express.use(express.json());
 
     this.useControllers();
+    this.initializeDatabase();
 
     return this.express;
   }
