@@ -1,9 +1,7 @@
 export interface Card {
-  id: string;
+  id: bigint;
   number: bigint;
   cvv: number;
-  exp: string;
-  type: CardType;
+  expiry: string;
+  type: 'CREDIT' | 'DEBIT';
 }
-
-export type CardType = 'CREDIT' | 'DEBIT';

@@ -2,3 +2,18 @@
 @tailwind components;
 @tailwind utilities;
 
+@import './animations.scss';
+@import './components.scss';
+
+body {
+  font-family: "Inter", sans-serif;
+}
+
+img {
+  width: 100%;
+  height: auto;
+}
+
+::-webkit-scrollbar {
+  display: none;
+}

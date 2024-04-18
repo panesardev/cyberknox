@@ -1,17 +1,19 @@
-import { Component } from '@angular/core';
-import { API_URL } from '../../app.constants';
+import { Component, inject } from '@angular/core';
+import { Store } from '@ngrx/store';
+import { SelectAuth } from '../../store/auth/auth.selectors';
+import { JsonPipe } from '@angular/common';
 
 @Component({
   selector: 'app-index',
   standalone: true,
-  imports: [],
+  imports: [
+    JsonPipe,
+  ],
   templateUrl: './index.component.html',
 })
 export default class IndexComponent {
+  private store = inject(Store);
 
-  
-  ngOnInit(): void {
-    console.log(API_URL);
-  }
+  authState = this.store.selectSignal(SelectAuth);
 
 }

@@ -7,6 +7,10 @@ export const routes: Routes = [
     component: IndexComponent,
   },
   {
+    path: 'create-account',
+    loadComponent: () => import('./routes/create-account/create-account.component'),
+  },
+  {
     path: '**',
     redirectTo: '/',
     pathMatch: 'full',

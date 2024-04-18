@@ -1,0 +1,55 @@
+<section class="max-w-4xl mx-auto">
+  <h1 class="heading">Create new account</h1>
+
+  <div class="bg-white rounded-lg p-6 md:p-12">
+    <form [formGroup]="createAccountForm" (submit)="createAccount()">
+      <div class="grid md:grid-cols-2 gap-6 md:gap-12 mb-8">
+        <div class="grid gap-4 h-fit">
+          <fieldset>
+            <label>First name</label>
+            <input type="text" name="firstName" formControlName="firstName" placeholder="first name">
+          </fieldset>
+          <fieldset>
+            <label>Last name</label>
+            <input type="text" name="lastName" formControlName="lastName" placeholder="last name">
+          </fieldset>
+          <fieldset>
+            <label>Email</label>
+            <input type="email" name="email" formControlName="email" placeholder="email">
+          </fieldset>
+          <fieldset>
+            <label>Password</label>
+            <input type="text" name="password" formControlName="password" placeholder="min 6 characters">
+          </fieldset>
+        </div>
+        <div class="grid gap-4 h-fit">
+          <div class="grid grid-cols-[1fr_2fr] gap-4">
+            <fieldset>
+              <label>House</label>
+              <input type="text" name="houseNumber" formControlName="houseNumber" placeholder="number">
+            </fieldset>
+            <fieldset>
+              <label>Street name</label>
+              <input type="text" name="street" formControlName="street" placeholder="street name">
+            </fieldset>
+          </div>
+          <fieldset>
+            <label>City</label>
+            <input type="text" name="city" formControlName="city" placeholder="city">
+          </fieldset>
+          <fieldset>
+            <label>Country</label>
+            <input type="text" name="country" formControlName="country" placeholder="country">
+          </fieldset>
+          <fieldset>
+            <label>Postal code</label>
+            <input type="text" name="postalCode" formControlName="postalCode" placeholder="A1B 2C3">
+          </fieldset>
+        </div>
+      </div>
+      <div class="grid md:flex md:justify-end items-center gap-6 md:gap-8">
+        <button class="primary px-12" type="submit">Create my account</button>
+      </div>
+    </form>
+  </div>
+</section>

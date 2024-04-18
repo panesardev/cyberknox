@@ -2,6 +2,9 @@ import express from 'express';
 import cors from 'cors';
 import compression from 'compression';
 import { IndexController } from './controllers/index.controller';
+import { AuthController } from './controllers/auth.controller';
+import { AuthService } from './services/auth.service';
+import { UsersController } from './controllers/users.controller';
 
 require('dotenv').config();
 
@@ -16,10 +19,8 @@ export class App {
 
   private useControllers() {
     this.express.use('/', new IndexController().router);
-  }
-
-  private async initializeDatabase() {
-
+    this.express.use('/auth', new AuthController().router);
+    this.express.use('/users', new UsersController().router);
   }
 
   getExpress() {
@@ -28,7 +29,6 @@ export class App {
     this.express.use(express.json());
 
     this.useControllers();
-    this.initializeDatabase();
 
     return this.express;
   }

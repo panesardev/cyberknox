@@ -11,3 +11,4 @@ export class IndexController {
     response.send('Express api starter project');
   }
 }
+

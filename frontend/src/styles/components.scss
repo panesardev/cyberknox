@@ -1,0 +1,25 @@
+@layer components {
+  .heading {
+    @apply font-bold bg-gradient-to-br from-primary to-pink-500 text-3xl text-transparent bg-clip-text pb-3 mb-6;
+  }
+
+  button {
+    @apply bg-slate-100 flex justify-center items-center rounded gap-3 px-8 py-3 hover:opacity-90;
+  }
+
+  button.primary {
+    @apply bg-gradient-to-br from-primary to-pink-500 text-secondary;
+  }
+  
+  button.secondary {
+    @apply bg-secondary text-primary;
+  }
+  
+  fieldset {
+    @apply grid gap-2;
+  }
+
+  input {
+    @apply bg-slate-100 rounded outline-none px-5 py-3 max-w-full min-w-8;
+  }
+}

@@ -1,7 +1,6 @@
 export interface Address {
-  id: string;
-  userId: string;
-  houseNumber: number;
+  id: bigint;
+  houseNumber: string;
   street: string;
   city: string;
   country: string;
