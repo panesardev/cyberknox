@@ -11,6 +11,7 @@ export function isAuthenticated(request: Request, response: Response, next: () =
 
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    console.log(decoded);
     request.body.user = decoded;
     next();
   } catch (e) {

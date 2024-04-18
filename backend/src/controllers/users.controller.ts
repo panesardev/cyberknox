@@ -1,7 +1,6 @@
 import { Request, Response, Router } from "express";
-import { db } from "../database";
-import { SelectableUser } from "../database/tables";
 import { isAuthenticated } from "../middlewares/auth.middleware";
+import { UserService } from "../services/user.service";
 
 export class UsersController {
   readonly router = Router();
@@ -12,7 +11,7 @@ export class UsersController {
 
   async findById(request: Request, response: Response) {
     const id = Number(request.params.id);
-    const user = await db.selectFrom('user').where('id', '==', id).executeTakeFirst() as SelectableUser;
+    const user = await UserService.findById(id);
     response.json(user);
   }
 }

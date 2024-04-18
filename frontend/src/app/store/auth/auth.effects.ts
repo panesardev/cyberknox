@@ -12,8 +12,8 @@ export const login$ = createEffect(
       ofType(Login),
       exhaustMap(action => 
         auth.login(action).pipe(
-          map(response => response.code === 200 ? LoginSuccess(response) : LoginErrored(response)),
-          catchError(e => of(LoginErrored({ code: 400, token: null, message: e.message }))),
+          map(response => LoginSuccess(response)),
+          catchError(e => of(LoginErrored({ token: null, message: e.message }))),
         ),
       ),
     );
@@ -27,8 +27,8 @@ export const createAccount$ = createEffect(
       ofType(CreateAccount),
       exhaustMap(action => 
         auth.createAccount(action).pipe(
-          map(response => response.code === 200 ? CreateAccountSuccess(response) : CreateAccountErrored(response)),
-          catchError(e => of(CreateAccountErrored({ code: 400, token: null, message: e.message }))),
+          map(response => CreateAccountSuccess(response)),
+          catchError(e => of(CreateAccountErrored({ token: null, message: e.message }))),
         ),
       ),
     );
@@ -42,7 +42,7 @@ export const saveToken$ = createEffect(
       ofType(LoginSuccess, CreateAccountSuccess),
       switchMap(action => {
         auth.saveToken(action.token);
-        const { userId } = decode(action.type);
+        const { userId } = decode(action.token);
         return userService.findById(userId).pipe(
           map(user => SetUser({ user })),
         );

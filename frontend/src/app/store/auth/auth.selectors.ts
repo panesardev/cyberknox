@@ -7,3 +7,4 @@ export const SelectAuthToken = createSelector(
   SelectAuth,
   (state: AuthState) => state.token,
 );
+

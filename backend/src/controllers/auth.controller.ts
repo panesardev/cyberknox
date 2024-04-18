@@ -16,12 +16,12 @@ export class AuthController {
 
     try {
       const token = await AuthService.login(body);
-      authResponse = { code: 200, token };
-      response.status(200).json(authResponse);
+      authResponse = {token };
+      response.json(authResponse);
 
     } catch (e) {
-      authResponse = { code: 400, token: null, message: e.message };
-      response.status(400).json(authResponse);
+      authResponse = { token: null, message: e.message };
+      response.json(authResponse);
     }
   }
 
@@ -31,12 +31,12 @@ export class AuthController {
 
     try {
       const token = await AuthService.createAccount(body);
-      authResponse = { code: 200, token };
-      response.status(200).json(authResponse);
+      authResponse = { token };
+      response.json(authResponse);
 
     } catch (e) {
-      authResponse = { code: 400, token: null, message: e.message };
-      response.status(400).json(authResponse);
+      authResponse = { token: null, message: e.message };
+      response.json(authResponse);
     }
   }
 }

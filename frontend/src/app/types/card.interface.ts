@@ -1,5 +1,5 @@
 export interface Card {
-  id: bigint;
+  id: number;
   number: bigint;
   cvv: number;
   expiry: string;

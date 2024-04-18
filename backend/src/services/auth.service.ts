@@ -1,13 +1,13 @@
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
-import { db } from "../database";
-import { SelectableUser } from "../database/tables";
 import { CreateAccountRequestBody, LoginRequestBody } from "../types/auth";
-import { generateCard } from "../utilities/card.utilities";
+import { UserService } from './user.service';
+import { AddressService } from './address.service';
+import { CardService } from './card.service';
 
 export namespace AuthService {
   export async function login(body: LoginRequestBody): Promise<string> {
-    const exists = await db.selectFrom('user').where('email', '==', body.email).executeTakeFirst() as SelectableUser;
+    const exists = await UserService.findByEmail(body.email);
     if (exists) {
       const doesPasswordMatch = await bcrypt.compare(body.password, exists.password);
   
@@ -18,30 +18,26 @@ export namespace AuthService {
       }
       else throw Error('wrong password!');
     }
-    else throw Error('email not found!');
+    else throw Error('user not found!');
   }
 
   export async function createAccount(body: CreateAccountRequestBody): Promise<string> {
-    // const alreadyExists = await db.selectFrom('user').where('email', '==', body.user.email).executeTakeFirst();
-    // if (alreadyExists) throw Error('user already exists!');
+    const exists = await UserService.findByEmail(body.user.email);
+    if (exists) throw Error('user already exists!');
 
-    const insertAddressResult = await db.insertInto('address').values(body.address).executeTakeFirst();
-  
-    const creditCard = generateCard('CREDIT');
-    const insertCreditCardResult = await db.insertInto('card').values(creditCard).executeTakeFirst();
-  
-    const debitCard = generateCard('DEBIT');
-    const insertDebitCardResult = await db.insertInto('card').values(debitCard).executeTakeFirst();
-  
+    const { id: addressId } = await AddressService.create(body.address);
+    const { id: creditCardId } = await CardService.create('CREDIT');
+    const { id: debitCardId } = await CardService.create('DEBIT');
+    
     const password = body.user.password;
     const hashedPassword = await bcrypt.hash(password, 10);
   
-    body.user.addressId = insertAddressResult.insertId;
-    body.user.creditCardId = insertCreditCardResult.insertId;
-    body.user.debitCardId = insertDebitCardResult.insertId;
+    body.user.addressId = addressId;
+    body.user.creditCardId = creditCardId;
+    body.user.debitCardId = debitCardId;
     body.user.password = hashedPassword;
   
-    await db.insertInto('user').values(body.user).executeTakeFirstOrThrow();
+    await UserService.create(body.user);
   
     return await this.login({ email: body.user.email, password });
   }

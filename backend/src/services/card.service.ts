@@ -1,0 +1,29 @@
+import { CardRepository } from "../database";
+import { Card } from "../database/entities";
+
+export namespace CardService {
+  export async function create(type: Card['type']): Promise<Card> {
+    const card = generateCard(type);
+    return await CardRepository.save(card);
+  }
+
+  export async function remove(card: Card): Promise<void> {
+    await CardRepository.delete(card);
+  }
+
+  function generateCard(type: Card['type']): Card {
+    const randomNumber = Math.floor(Math.random() * (10**16 - 10**15 + 1)) + 10**15;
+    let numberString = randomNumber.toString();
+    numberString = numberString.padStart(16, '0');
+    const number = BigInt(numberString);
+  
+    const cvv = Math.floor(Math.random() * (999 - 100 + 1)) + 100;
+    
+    const today = new Date();
+    today.setFullYear(today.getFullYear() + 5);
+    const expiry = `${today.getMonth()}/${today.getFullYear()}`;
+  
+    return { number, cvv, expiry, type };
+  }
+}
+

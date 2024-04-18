@@ -4,6 +4,7 @@
     "Insertable",
     "kysely",
     "ngrx",
+    "typeorm",
     "Updateable"
   ]
 }

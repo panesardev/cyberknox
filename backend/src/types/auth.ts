@@ -1,4 +1,4 @@
-import { InsertableAddress, InsertableUser } from "../database/tables";
+import { Address, User } from "../database/entities";
 
 export interface LoginRequestBody {
   email: string;
@@ -6,12 +6,11 @@ export interface LoginRequestBody {
 }
 
 export interface CreateAccountRequestBody {
-  user: InsertableUser;
-  address: InsertableAddress;
+  user: User;
+  address: Address;
 }
 
 export interface AuthResponse {
-  code: 200 | 400;
   message?: string;
   token: string | null;
 }
