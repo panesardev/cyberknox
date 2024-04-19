@@ -2,12 +2,17 @@ import { CardRepository } from "../database";
 import { Card } from "../database/entities";
 
 export namespace CardService {
+  export async function findById(id: Card['id']): Promise<Card> {
+    return await CardRepository.findOneBy({ id });
+  }
+
   export async function create(type: Card['type']): Promise<Card> {
     const card = generateCard(type);
     return await CardRepository.save(card);
   }
 
-  export async function remove(card: Card): Promise<void> {
+  export async function remove(id: Card['id']): Promise<void> {
+    const card = await findById(id);
     await CardRepository.delete(card);
   }
 

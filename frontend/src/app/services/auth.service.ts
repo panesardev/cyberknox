@@ -1,13 +1,11 @@
-import { isPlatformBrowser } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
-import { inject, Injectable, PLATFORM_ID } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { API_URL } from '../app.constants';
 import { AuthResponse, CreateAccountRequestBody, LoginRequestBody } from '../types/auth.interface';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
-  private platformId = inject(PLATFORM_ID);
   private http = inject(HttpClient);
 
   login(body: LoginRequestBody): Observable<AuthResponse> {
@@ -23,21 +21,14 @@ export class AuthService {
   }
 
   saveToken(token: string): void {
-    if (isPlatformBrowser(this.platformId)) {
-      localStorage.setItem('token', token);
-    }
+    localStorage.setItem('token', token);
   }
 
   getToken(): string {
-    if (isPlatformBrowser(this.platformId)) {
-      return localStorage.getItem('token');
-    }
-    else return null;
+    return localStorage.getItem('token');
   }
 
   removeToken(): void {
-    if (isPlatformBrowser(this.platformId)) {
-      localStorage.removeItem('token');
-    }
+    localStorage.removeItem('token');
   }
 }

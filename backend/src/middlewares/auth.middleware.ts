@@ -18,3 +18,16 @@ export function isAuthenticated(request: Request, response: Response, next: () =
     response.status(403).json({ message: 'Forbidden' });
   }
 }
+
+export function isOwner(request: Request, response: Response, next: () => void) {
+  const user = request.body.user;
+
+  console.log(user);
+
+  if (user.userId) {
+    next();
+  }
+  else {
+    response.status(403).json({ message: 'Forbidden' });
+  }
+}

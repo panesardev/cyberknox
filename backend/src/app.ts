@@ -1,10 +1,12 @@
 import express from 'express';
 import cors from 'cors';
 import compression from 'compression';
-import { IndexController } from './controllers/index.controller';
 import { AuthController } from './controllers/auth.controller';
-import { UsersController } from './controllers/users.controller';
+import { UserController } from './controllers/user.controller';
 import { AppDataSource } from './database';
+import { AddressController } from './controllers/address.controller';
+import { CardController } from './controllers/card.controller';
+import { isAuthenticated } from './middlewares/auth.middleware';
 
 require('dotenv').config();
 
@@ -18,9 +20,10 @@ export class App {
   }
 
   private useControllers() {
-    this.express.use('/', new IndexController().router);
     this.express.use('/auth', new AuthController().router);
-    this.express.use('/users', new UsersController().router);
+    this.express.use('/user', isAuthenticated, new UserController().router);
+    this.express.use('/address', isAuthenticated, new AddressController().router);
+    this.express.use('/card', isAuthenticated, new CardController().router);
   }
 
   async useDatabase() {
