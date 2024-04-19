@@ -8,7 +8,6 @@ export const AppDataSource = new DataSource({
   type: "postgres",
   url: process.env.POSTGRES_URL,
   synchronize: true,
-  logging: true,
   entities: [User, Address, Card],
 })
 

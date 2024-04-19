@@ -13,10 +13,10 @@ export class AuthController {
   async login(request: Request, response: Response) {
     const body = request.body as LoginRequestBody;
     let authResponse: AuthResponse = null;
-
+    
     try {
       const token = await AuthService.login(body);
-      authResponse = {token };
+      authResponse = { token };
       response.json(authResponse);
 
     } catch (e) {

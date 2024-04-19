@@ -1,7 +1,6 @@
 import { Component, inject } from '@angular/core';
-import { Store } from '@ngrx/store';
-import { SelectAuth } from '../../store/auth/auth.selectors';
 import { JsonPipe } from '@angular/common';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-index',
@@ -12,8 +11,8 @@ import { JsonPipe } from '@angular/common';
   templateUrl: './index.component.html',
 })
 export default class IndexComponent {
-  private store = inject(Store);
+  private auth = inject(AuthService);
 
-  authState = this.store.selectSignal(SelectAuth);
+  authState = this.auth.authState;
 
 }

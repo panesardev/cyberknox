@@ -3,7 +3,8 @@ import jwt from 'jsonwebtoken';
 
 export function isAuthenticated(request: Request, response: Response, next: () => void) {
   const authHeader = request.headers.authorization;
-
+  console.log(authHeader);
+  
   if (!authHeader || !authHeader.startsWith('Bearer ')) {
     return response.status(401).json({ message: 'Unauthorized' });
   }

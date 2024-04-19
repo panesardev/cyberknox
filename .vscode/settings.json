@@ -3,7 +3,10 @@
     "Cyberknox",
     "Insertable",
     "kysely",
+    "localstorage",
+    "ngneat",
     "ngrx",
+    "ngxpert",
     "typeorm",
     "Updateable"
   ]

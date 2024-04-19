@@ -1,19 +1,103 @@
 import { HttpClient } from '@angular/common/http';
-import { inject, Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { afterNextRender, inject, Injectable, signal } from '@angular/core';
+import { HotToastService } from '@ngxpert/hot-toast';
+import { catchError, EMPTY, exhaustMap, tap } from 'rxjs';
 import { API_URL } from '../app.constants';
-import { AuthResponse, CreateAccountRequestBody, LoginRequestBody } from '../types/auth.interface';
+import { AuthResponse, CreateAccountRequestBody, decode, LoginRequestBody } from '../types/auth.interface';
+import { User } from '../types/user.interface';
+import { LOCAL_STORAGE } from '../utilities/localstorage';
+import { UserService } from './user.service';
+
+export interface AuthState {
+  user: User;
+  isAuthenticated: boolean;
+  isLoading: boolean;
+  token: string;
+}
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
+  private localStorage = inject(LOCAL_STORAGE);
   private http = inject(HttpClient);
+  private toast = inject(HotToastService);
+  private userService = inject(UserService);
 
-  login(body: LoginRequestBody): Observable<AuthResponse> {
-    return this.http.post<AuthResponse>(`${API_URL}/auth/login`, body);
+  private _authState = signal<AuthState>({
+    isAuthenticated: false,
+    user: null,
+    token: null,
+    isLoading: false,
+  });
+
+  authState = this._authState.asReadonly();
+
+  ref = afterNextRender(() => this.onAuthInit());
+
+  onAuthInit() {
+    this._authState.update(v => ({ ...v, isLoading: true }));
+    const token = this.getToken();
+    if (token) {
+      const { userId } = decode(token);
+      this.userService.findById(userId).pipe(
+        tap(httpResponse => this._authState.update(v => ({ 
+          ...v, 
+          isLoading: false,
+          isAuthenticated: true,
+          token,
+          user: httpResponse.payload,
+        }))),
+      ).subscribe();
+    }
   }
 
-  createAccount(body: CreateAccountRequestBody): Observable<AuthResponse> {
-    return this.http.post<AuthResponse>(`${API_URL}/auth/create-account`, body);
+  login(body: LoginRequestBody) {
+    this._authState.update(v => ({ ...v, isLoading: true }));
+    return this.http.post<AuthResponse>(`${API_URL}/auth/login`, body).pipe(
+      exhaustMap(response => {
+        this.saveToken(response.token);
+        this.toast.success('You are logged in!');
+        const { userId } = decode(response.token);
+        return this.userService.findById(userId).pipe(
+          tap(httpResponse => this._authState.update(v => ({ 
+            ...v, 
+            isLoading: false,
+            isAuthenticated: true,
+            token: response.token,
+            user: httpResponse.payload,
+          }))),
+        );
+      }),
+      catchError(e => {
+        this.toast.error(e.message);
+        this._authState.update(v => ({ ...v, isLoading: false }));
+        return EMPTY;
+      }),
+    );
+  }
+
+  createAccount(body: CreateAccountRequestBody) {
+    this._authState.update(v => ({ ...v, isLoading: true }));
+    return this.http.post<AuthResponse>(`${API_URL}/auth/create-account`, body).pipe(
+      exhaustMap(response => {
+        this.saveToken(response.token);
+        this.toast.success('You are logged in!');
+        const { userId } = decode(response.token);
+        return this.userService.findById(userId).pipe(
+          tap(httpResponse => this._authState.update(v => ({ 
+            ...v, 
+            isLoading: false,
+            isAuthenticated: true,
+            token: response.token,
+            user: httpResponse.payload,
+          }))),
+        );
+      }),
+      catchError(e => {
+        this.toast.error(e.message);
+        this._authState.update(v => ({ ...v, isLoading: false }));
+        return EMPTY;
+      }),
+    );
   }
 
   logout(): void {
@@ -21,14 +105,18 @@ export class AuthService {
   }
 
   saveToken(token: string): void {
-    localStorage.setItem('token', token);
+    this.localStorage.setItem('token', token);
+    this._authState.update(v => ({ ...v, token }));
   }
 
   getToken(): string {
-    return localStorage.getItem('token');
+    const token = this.localStorage.getItem('token');
+    this._authState.update(v => ({ ...v, token }));
+    return token;
   }
 
   removeToken(): void {
-    localStorage.removeItem('token');
+    this.localStorage.removeItem('token');
+    this._authState.update(v => ({ ...v, token: null }));
   }
 }

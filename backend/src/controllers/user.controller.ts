@@ -14,7 +14,7 @@ export class UserController {
   async findById(request: Request, response: Response) {
     try {
       const id: User['id'] = Number(request.params.id);
-      const user = await UserService.findById(id);
+      const { password, ...user } = await UserService.findById(id);
       response.json({ payload: user } satisfies HttpResponse);
     }
     catch (e) {

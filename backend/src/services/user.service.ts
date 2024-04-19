@@ -3,13 +3,11 @@ import { User } from "../database/entities";
 
 export namespace UserService {
   export async function findById(id: User['id']): Promise<User> {
-    const { password, ...rest } = await UserRepository.findOneBy({ id });
-    return rest as User;
+    return await UserRepository.findOneBy({ id });
   }
   
   export async function findByEmail(email: User['email']): Promise<User> {
-    const { password, ...rest } = await UserRepository.findOneBy({ email });
-    return rest as User;
+    return await UserRepository.findOneBy({ email });
   }
 
   export async function create(user: User): Promise<User> {

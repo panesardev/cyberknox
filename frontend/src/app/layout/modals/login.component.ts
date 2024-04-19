@@ -1,10 +1,9 @@
 import { Component, inject } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Store } from '@ngrx/store';
-import { Login } from '../../store/auth/auth.actions';
 import { BaseModalComponent } from './base.modal.component';
 import { Modal } from './modal.class';
 import { RouterLink } from '@angular/router';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-login',
@@ -36,7 +35,7 @@ import { RouterLink } from '@angular/router';
   `,
 })
 export class LoginComponent extends Modal {
-  private store = inject(Store);
+  private auth = inject(AuthService);
 
   loginForm = new FormGroup({
     email: new FormControl('', Validators.required),
@@ -45,10 +44,10 @@ export class LoginComponent extends Modal {
 
   login() {
     if (this.loginForm.valid) {
-      this.store.dispatch(Login({
+      this.auth.login({
         email: this.loginForm.value.email,
         password: this.loginForm.value.password,
-      }));      
+      }).subscribe(); 
     }
   }
 
