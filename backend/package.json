@@ -4,8 +4,7 @@
   "version": "1.0.0",
   "main": "index.ts",
   "scripts": {
-    "dev": "nodemon --exec ts-node index.ts",
-    "build": "tsc"
+    "dev": "nodemon --exec ts-node index.ts"
   },
   "license": "ISC",
   "dependencies": {
