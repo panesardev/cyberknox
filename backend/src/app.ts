@@ -1,12 +1,12 @@
 import express from 'express';
 import cors from 'cors';
 import compression from 'compression';
-import { AuthController } from './auth/auth.controller';
+import { AuthController } from './domains/auth/auth.controller';
 import { UserController } from './domains/users/user.controller';
 import { AppDataSource } from '../src/database';
 import { AddressController } from './domains/addresses/address.controller';
 import { CardController } from './domains/cards/card.controller';
-import { isAuthenticated } from './auth/auth.middleware';
+import { isAuthenticated } from './domains/auth/auth.middleware';
 
 export default class App {
   private static instance: App;
@@ -19,9 +19,9 @@ export default class App {
 
   private registerControllers() {
     this.server.use('/auth', new AuthController().router);
-    this.server.use('/user', isAuthenticated, new UserController().router);
-    this.server.use('/address', isAuthenticated, new AddressController().router);
-    this.server.use('/card', isAuthenticated, new CardController().router);
+    this.server.use('/users', isAuthenticated, new UserController().router);
+    this.server.use('/addresses', isAuthenticated, new AddressController().router);
+    this.server.use('/cards', isAuthenticated, new CardController().router);
   }
 
   private async initializeDatabase() {

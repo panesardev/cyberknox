@@ -1,5 +1,5 @@
-import { Address } from "../domains/addresses/address.entity";
-import { User } from "../domains/users/user.entity";
+import { Address } from "../addresses/address.entity";
+import { User } from "../users/user.entity";
 
 export interface LoginRequestBody {
   email: string;

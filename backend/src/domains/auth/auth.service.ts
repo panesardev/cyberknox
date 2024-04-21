@@ -1,10 +1,10 @@
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { CreateAccountRequestBody, LoginRequestBody } from "./auth.interface";
-import { UserService } from '../domains/users/user.service';
-import { AddressService } from '../domains/addresses/address.service';
-import { CardService } from '../domains/cards/card.service';
-import { AccountService } from '../domains/accounts/account.service';
+import { UserService } from '../users/user.service';
+import { AddressService } from '../addresses/address.service';
+import { CardService } from '../cards/card.service';
+import { AccountService } from '../accounts/account.service';
 
 export namespace AuthService {
   export async function login(body: LoginRequestBody): Promise<string> {
