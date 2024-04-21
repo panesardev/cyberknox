@@ -15,7 +15,6 @@
   "include": [
     "./api/*.ts",
     "./*.js",
-    "src/**/*.ts",
     "./index.ts"
   ],
 }
