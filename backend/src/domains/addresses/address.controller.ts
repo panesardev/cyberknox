@@ -1,5 +1,5 @@
 import { Request, Response, Router } from "express";
-import { HttpResponse } from "../../interfaces/http.interface";
+import { HttpResponse } from "../../../src/interfaces/http.interface";
 import { AddressService } from "./address.service";
 import { Address } from "./address.entity";
 

@@ -1,6 +1,6 @@
 import { Request, Response, Router } from "express";
 import { UserService } from "./user.service";
-import { HttpResponse } from "../../interfaces/http.interface";
+import { HttpResponse } from "../../../src/interfaces/http.interface";
 import { isOwner } from "../../auth/auth.middleware";
 import { User } from "./user.entity";
 

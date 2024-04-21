@@ -1,4 +1,4 @@
-import { UserRepository } from "../../database";
+import { UserRepository } from "../../../src/database";
 import { User } from "./user.entity";
 
 export namespace UserService {

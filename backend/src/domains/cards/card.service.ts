@@ -1,4 +1,4 @@
-import { CardRepository } from "../../database";
+import { CardRepository } from "../../../src/database";
 import { Card } from "./card.entity";
 
 export namespace CardService {

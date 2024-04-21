@@ -1,8 +1,8 @@
 require('dotenv').config();
-import createServer from "./api";
+
+import App from "./src/app";
 
 const PORT = Number(process.env.port);
 
-createServer().listen(PORT, () =>
-  console.log(`Express running at PORT:${PORT}`),
-);
+App.getInstance().run(PORT);
+

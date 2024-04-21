@@ -1,4 +1,4 @@
-import { AddressRepository } from "../../database";
+import { AddressRepository } from "../../../src/database";
 import { Address } from "./address.entity";
 
 export namespace AddressService {
