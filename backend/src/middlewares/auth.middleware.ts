@@ -11,6 +11,7 @@ export function isAuthenticated(request: Request, response: Response, next: () =
 
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    
     request.body.decoded = decoded;
     next();
   } catch (e) {
@@ -19,7 +20,7 @@ export function isAuthenticated(request: Request, response: Response, next: () =
 }
 
 export function isOwner(request: Request, response: Response, next: () => void) {
-  if (request.body.decoded.userId === request.params.id) {
+  if (request.body.decoded.userId === Number(request.params.id)) {
     next();
   }
   else {

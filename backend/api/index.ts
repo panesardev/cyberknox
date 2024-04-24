@@ -1,3 +1,3 @@
 import App from "../src/app";
 
-export default App.getInstance().getExpress();
+export default App.getInstance().getServer();

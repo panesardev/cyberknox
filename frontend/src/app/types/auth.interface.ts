@@ -21,7 +21,6 @@ export interface JwtPayload {
 }
 
 export function decode(token: string): JwtPayload {
-  console.log(token);
   const parts = token.split('.');
   if (parts.length !== 3) {
     throw new Error('Invalid JWT token');

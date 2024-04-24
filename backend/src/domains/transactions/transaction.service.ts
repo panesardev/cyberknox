@@ -3,7 +3,7 @@ import { Account } from "../accounts/account.entity";
 import { Transaction } from "./transaction.entity";
 
 export namespace TransactionService {
-  export async function findAll(accountId: Account['id']): Promise<Transaction[]> {
+  export async function findAllByAccountId(accountId: Account['id']): Promise<Transaction[]> {
     return await TransactionRepository.findBy({ accountId });
   }
   

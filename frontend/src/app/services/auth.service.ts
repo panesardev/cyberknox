@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { afterNextRender, inject, Injectable, signal } from '@angular/core';
 import { HotToastService } from '@ngxpert/hot-toast';
-import { catchError, EMPTY, exhaustMap, of, tap } from 'rxjs';
+import { catchError, EMPTY, exhaustMap, tap } from 'rxjs';
 import { API_URL } from '../app.constants';
 import { AuthResponse, CreateAccountRequestBody, decode, LoginRequestBody } from '../types/auth.interface';
 import { User } from '../types/user.interface';
@@ -15,6 +15,13 @@ export interface AuthState {
   token: string;
 }
 
+const initialState: AuthState = {
+  isAuthenticated: false,
+  user: null,
+  token: null,
+  isLoading: false,
+};
+
 @Injectable({ providedIn: 'root' })
 export class AuthService {
   private localStorage = inject(LOCAL_STORAGE);
@@ -22,12 +29,7 @@ export class AuthService {
   private toast = inject(HotToastService);
   private userService = inject(UserService);
 
-  private state = signal<AuthState>({
-    isAuthenticated: false,
-    user: null,
-    token: null,
-    isLoading: false,
-  });
+  private state = signal<AuthState>(initialState);
 
   authState = this.state.asReadonly();
 
@@ -59,8 +61,6 @@ export class AuthService {
     this.state.update(v => ({ ...v, isLoading: true }));
     return this.http.post<AuthResponse>(`${API_URL}/auth/login`, body).pipe(
       exhaustMap(response => {
-        console.log(response);
-        
         this.saveToken(response.token);
         this.toast.success('You are logged in!');
         const { userId } = decode(response.token);
@@ -108,6 +108,7 @@ export class AuthService {
   }
 
   logout(): void {
+    this.state.set(initialState);
     this.removeToken();
   }
 
