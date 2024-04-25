@@ -1,7 +1,7 @@
 import { Component, inject, ViewContainerRef } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { ModalService } from './services/modal.service';
 import { NavbarComponent } from './layout/navbar.component';
+import { ModalService } from './services/modal.service';
 
 @Component({
   selector: 'app-root',
@@ -24,4 +24,5 @@ export class AppComponent {
   constructor() {
     this.modal.setContainer(this.container);
   }
+
 }

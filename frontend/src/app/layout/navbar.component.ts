@@ -1,6 +1,5 @@
 import { Component, inject } from '@angular/core';
 import { ModalService } from '../services/modal.service';
-import { LoginComponent } from './modals/login.component';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { BRAND } from '../app.constants';
 import { NavComponent } from './modals/nav.component';
@@ -23,21 +22,18 @@ import { NavComponent } from './modals/nav.component';
         </div>
         <div class="hidden md:flex items-center gap-6 md:gap-8">
           <div>
-            <a class="hover:underline hover:text-primary" routerLink="/" routerLinkActive="text-primary">Home</a>
-          </div>
-          <div>
             <a class="hover:underline hover:text-primary" routerLink="/dashboard" routerLinkActive="text-primary">Dashboard</a>
           </div>
           <div>
             <a class="hover:underline hover:text-primary" routerLink="/profile" routerLinkActive="text-primary">Profile</a>
           </div>
-          <div (click)="openLoginModal()">
-            <button class="primary py-2 px-6 rounded-full">Login</button>
+          <div>
+            <button class="primary py-2 px-6 rounded-full" routerLink="/login">Login</button>
           </div>
         </div>
         <div class="block md:hidden">
-          <div (click)="openLoginModal()">
-            <button class="primary py-1 px-4 rounded-full">Login</button>
+          <div>
+            <button class="primary py-1 px-4 rounded-full" routerLink="/login">Login</button>
           </div>
         </div>
       </nav>
@@ -48,10 +44,6 @@ export class NavbarComponent {
   private modal = inject(ModalService);
 
   brand = BRAND;
-
-  openLoginModal() {
-    this.modal.open(LoginComponent);
-  }
 
   openNavModal() {
     this.modal.open(NavComponent);

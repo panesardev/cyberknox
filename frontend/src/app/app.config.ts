@@ -4,7 +4,7 @@ import { provideClientHydration } from '@angular/platform-browser';
 import { PreloadAllModules, provideRouter, withComponentInputBinding, withPreloading } from '@angular/router';
 import { provideHotToastConfig } from '@ngxpert/hot-toast';
 import { routes } from './app.routes';
-import { AuthInterceptor } from './utilities/auth.interceptor';
+import { AuthInterceptor } from './auth/auth.interceptor';
 
 export const appConfig: ApplicationConfig = {
   providers: [

@@ -1,0 +1,22 @@
+<section class="max-w-md mx-auto">
+  <h1 class="heading">Login</h1>
+
+  <div class="bg-white rounded-lg p-6 md:p-12">
+    <form [formGroup]="loginForm" (submit)="login()" class="grid gap-3">
+      <fieldset>
+        <label>Enter email</label>
+        <input type="email" name="email" formControlName="email" placeholder="john.wick123@example.com">
+      </fieldset>
+      <fieldset>
+        <label>Enter password</label>
+        <input type="password" name="password" formControlName="password" placeholder="your password">
+      </fieldset>
+      <div class="py-2 text-center">
+        <a routerLink="/create-account" class="text-primary hover:underline">Create new account instead</a>
+      </div>
+      <div class="grid">
+        <button class="primary" type="submit">Login</button>
+      </div>
+    </form>
+  </div>
+</section>

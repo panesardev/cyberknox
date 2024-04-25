@@ -1,18 +1,19 @@
+import { AsyncPipe, JsonPipe } from '@angular/common';
 import { Component, inject } from '@angular/core';
-import { JsonPipe } from '@angular/common';
-import { AuthService } from '../../services/auth.service';
+import { AuthStore } from '../../auth/auth.store';
 
 @Component({
   selector: 'app-index',
   standalone: true,
   imports: [
+    AsyncPipe,
     JsonPipe,
   ],
   templateUrl: './index.component.html',
 })
 export default class IndexComponent {
-  private auth = inject(AuthService);
+  private auth = inject(AuthStore);
 
-  authState = this.auth.authState;
+  authState$ = this.auth.authState$;
 
 }

@@ -1,6 +1,8 @@
 import { Component, inject } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { AuthService } from '../../services/auth.service';
+import { AuthService } from '../../auth/auth.service';
+import { AuthStore } from '../../auth/auth.store';
+import { CreateAccountAction } from '../../auth/auth.actions';
 
 @Component({
   selector: 'app-create-account',
@@ -11,7 +13,7 @@ import { AuthService } from '../../services/auth.service';
   templateUrl: './create-account.component.html',
 })
 export default class CreateAccountComponent {
-  private auth = inject(AuthService);
+  private authStore = inject(AuthStore);
 
   createAccountForm = new FormGroup({
     firstName: new FormControl('', Validators.required),
@@ -27,7 +29,7 @@ export default class CreateAccountComponent {
 
   createAccount() {
     if (this.createAccountForm.valid || true) {
-      this.auth.createAccount({
+      this.authStore.dispatch(new CreateAccountAction({
         user: {
           firstName: this.createAccountForm.value.firstName,
           lastName: this.createAccountForm.value.lastName,
@@ -41,7 +43,7 @@ export default class CreateAccountComponent {
           country: this.createAccountForm.value.country,
           postalCode: this.createAccountForm.value.postalCode,
         },
-      }).subscribe();
+      }));
     }
   }
 

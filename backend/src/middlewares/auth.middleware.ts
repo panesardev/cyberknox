@@ -15,6 +15,7 @@ export function isAuthenticated(request: Request, response: Response, next: () =
     request.body.decoded = decoded;
     next();
   } catch (e) {
+    console.log(e.message);
     response.status(403).json({ message: 'Forbidden' });
   }
 }
