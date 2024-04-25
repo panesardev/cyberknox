@@ -11,12 +11,9 @@ export function isAuthenticated(): CanActivateFn {
     return authStore.authState$.pipe(
       take(1),
       map(state => {
-        console.log(state);
-        
         if (state && state.isAuthenticated) {
           return true;
         }
-        
         router.navigateByUrl('/');
         return false;
       }),

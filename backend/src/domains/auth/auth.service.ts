@@ -1,20 +1,20 @@
-import bcrypt from 'bcrypt';
-import jwt from 'jsonwebtoken';
-import { CreateAccountRequestBody, LoginRequestBody } from "./auth.interface";
-import { UserService } from '../users/user.service';
+import { compare, hash } from 'bcrypt';
+import { sign } from 'jsonwebtoken';
+import { AccountService } from '../accounts/account.service';
 import { AddressService } from '../addresses/address.service';
 import { CardService } from '../cards/card.service';
-import { AccountService } from '../accounts/account.service';
+import { UserService } from '../users/user.service';
+import { CreateAccountRequestBody, ExtendedJwtPayload, LoginRequestBody } from "./auth.interface";
 
 export namespace AuthService {
   export async function login(body: LoginRequestBody): Promise<string> {
     const exists = await UserService.findByEmail(body.email);
     if (exists) {
-      const doesPasswordMatch = await bcrypt.compare(body.password, exists.password);
+      const doesPasswordMatch = await compare(body.password, exists.password);
   
       if (doesPasswordMatch) {
-        const payload = { userId: exists.id };
-        const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '1h' });
+        const payload: ExtendedJwtPayload = { userId: exists.id };
+        const token = sign(payload, process.env.JWT_SECRET, { expiresIn: '7d' });
         return token;
       }
       else throw Error('wrong password!');
@@ -42,7 +42,7 @@ export namespace AuthService {
     body.user.savingsAccountId = savingsAccountId;
     
     const password = body.user.password;
-    const hashedPassword = await bcrypt.hash(password, 10);
+    const hashedPassword = await hash(password, 10);
     body.user.password = hashedPassword;
   
     await UserService.create(body.user);

@@ -1,21 +1,16 @@
-import { CreateAccountRequestBody, LoginRequestBody } from "../types/auth.interface";
+import { CreateAccountRequestBody, LoginRequestBody } from "./auth.interface";
 
 export interface AuthAction {}
 
-export class AuthInitAction implements AuthAction {
-  static readonly type = '[AUTH] Auth Init';
-}
+export class AuthInitAction implements AuthAction {}
 
 export class LoginAction implements AuthAction {
-  static readonly type = '[AUTH] Login';
   constructor(public body: LoginRequestBody) {}
 }
 
 export class CreateAccountAction implements AuthAction {
-  static readonly type = '[AUTH] Create Account';
   constructor(public body: CreateAccountRequestBody) {}
 }
 
-export class LogoutAction implements AuthAction {
-  static readonly type = '[AUTH] Logout';
-}
+export class LogoutAction implements AuthAction {}
+

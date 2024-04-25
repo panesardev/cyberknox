@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { API_URL } from '../app.constants';
-import { AuthResponse, CreateAccountRequestBody, LoginRequestBody } from '../types/auth.interface';
+import { AuthResponse, CreateAccountRequestBody, LoginRequestBody } from './auth.interface';
 import { LOCAL_STORAGE } from '../utilities/localstorage';
 
 @Injectable({ providedIn: 'root' })

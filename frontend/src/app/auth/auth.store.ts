@@ -1,10 +1,11 @@
 import { inject, Injectable } from '@angular/core';
-import { BehaviorSubject, catchError, map, of, switchMap } from 'rxjs';
+import { BehaviorSubject, catchError, map, of, switchMap, tap } from 'rxjs';
 import { UserService } from '../services/user.service';
-import { decode } from '../types/auth.interface';
 import { User } from '../types/user.interface';
 import { AuthAction, AuthInitAction, CreateAccountAction, LoginAction, LogoutAction } from './auth.actions';
 import { AuthService } from './auth.service';
+import { decodeJwt } from 'jose';
+import { ExtendedJwtPayload } from './auth.interface';
 
 export interface AuthState {
   user: User;
@@ -34,7 +35,7 @@ export class AuthStore {
         if (action instanceof AuthInitAction) {
           const token = this.auth.getToken();
           if (token) {
-            const { userId } = decode(token);
+            const { userId } = decodeJwt(token) as ExtendedJwtPayload;
             return this.userService.findById(userId).pipe(
               map(userResponse => ({
                 isAuthenticated: true,
@@ -52,7 +53,7 @@ export class AuthStore {
           return this.auth.login(action.body).pipe(
             switchMap(authResponse => {
               this.auth.saveToken(authResponse.token);
-              const { userId } = decode(authResponse.token);
+              const { userId } = decodeJwt(authResponse.token) as ExtendedJwtPayload;
               return this.userService.findById(userId).pipe(
                 map(userResponse => ({
                   isAuthenticated: true,
@@ -67,7 +68,7 @@ export class AuthStore {
           return this.auth.createAccount(action.body).pipe(
             switchMap(authResponse => {
               this.auth.saveToken(authResponse.token);
-              const { userId } = decode(authResponse.token);
+              const { userId } = decodeJwt(authResponse.token) as ExtendedJwtPayload;
               return this.userService.findById(userId).pipe(
                 map(userResponse => ({
                   isAuthenticated: true,
@@ -84,6 +85,7 @@ export class AuthStore {
         }
         return of(null);
       }),
+      tap(v => console.log(v)),
       catchError(e => {
         console.log(e);
         return of(initialState);

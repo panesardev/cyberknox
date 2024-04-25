@@ -1,6 +1,6 @@
 import { JwtPayload } from 'jsonwebtoken';
-import { Address } from "../addresses/address.entity";
-import { User } from "../users/user.entity";
+import { Address } from "../types/address.interface";
+import { User } from "../types/user.interface";
 
 export interface LoginRequestBody {
   email: string;
@@ -8,8 +8,8 @@ export interface LoginRequestBody {
 }
 
 export interface CreateAccountRequestBody {
-  user: User;
-  address: Address;
+  user: Partial<User>;
+  address: Partial<Address>;
 }
 
 export interface AuthResponse {
