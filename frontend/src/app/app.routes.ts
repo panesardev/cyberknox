@@ -1,5 +1,4 @@
 import { Routes } from '@angular/router';
-import DashboardComponent from './routes/dashboard/dashboard.component';
 import { isAuthenticated } from './auth/auth.guard';
 import IndexComponent from './routes/index/index.component';
 

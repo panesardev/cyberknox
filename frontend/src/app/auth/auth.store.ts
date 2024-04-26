@@ -1,107 +1,83 @@
 import { inject, Injectable } from '@angular/core';
-import { BehaviorSubject, catchError, map, of, switchMap, tap } from 'rxjs';
-import { UserService } from '../services/user.service';
-import { User } from '../types/user.interface';
-import { AuthAction, AuthInitAction, CreateAccountAction, LoginAction, LogoutAction } from './auth.actions';
-import { AuthService } from './auth.service';
 import { decodeJwt } from 'jose';
-import { ExtendedJwtPayload } from './auth.interface';
-
-export interface AuthState {
-  user: User;
-  isAuthenticated: boolean;
-  token: string;
-}
-
-const initialState: AuthState = {
-  isAuthenticated: false,
-  user: null,
-  token: null,
-};
+import { BehaviorSubject, catchError, concatMap, map, Observable, of, startWith, switchMap } from 'rxjs';
+import { StorageService } from '../services/storage.service';
+import { UserService } from '../services/user.service';
+import { AuthAction, CreateAccountAction, InitAction, LoginAction, LogoutAction } from './auth.actions';
+import { AuthState, ExtendedJwtPayload, initialState } from './auth.interface';
+import { AuthService } from './auth.service';
 
 @Injectable({ providedIn: 'root' })
 export class AuthStore {
-  private auth = inject(AuthService);
+  private storage = inject(StorageService);
+  private authService = inject(AuthService);
   private userService = inject(UserService);
 
-  private authState = new BehaviorSubject<AuthState>(initialState);
-  private actions = new BehaviorSubject<AuthAction>(new AuthInitAction());
+  private actions = new BehaviorSubject<AuthAction>(new InitAction());
 
-  readonly authState$ = this.authState.asObservable();
-
-  constructor() {
-    this.actions.pipe(
-      switchMap(action => {
-        if (action instanceof AuthInitAction) {
-          const token = this.auth.getToken();
-          if (token) {
-            const { userId } = decodeJwt(token) as ExtendedJwtPayload;
+  state$: Observable<AuthState> = this.actions.pipe(
+    startWith(initialState),
+    concatMap(action => {
+      if (action instanceof InitAction) {
+        const token = this.storage.get('token');
+        if (token) {
+          const { userId } = decodeJwt(token) as ExtendedJwtPayload;
+          return this.userService.findById(userId).pipe(
+            map(userResponse => ({
+              isAuthenticated: true,
+              token,
+              user: userResponse.payload,
+            })),
+            catchError(e => {
+              if (e.status === 403) this.storage.remove('token');
+              return of(initialState);
+            }),
+          );
+        }
+      }
+      if (action instanceof LoginAction) {
+        return this.authService.login(action.body).pipe(
+          switchMap(authResponse => {
+            this.storage.set('token', authResponse.token);
+            const { userId } = decodeJwt(authResponse.token) as ExtendedJwtPayload;
             return this.userService.findById(userId).pipe(
               map(userResponse => ({
                 isAuthenticated: true,
-                token,
+                token: authResponse.token,
                 user: userResponse.payload,
               })),
-              catchError(e => {
-                if (e.status === 403) this.auth.removeToken();
-                return of(initialState);
-              }),
             );
-          }
-        }
-        if (action instanceof LoginAction) {
-          return this.auth.login(action.body).pipe(
-            switchMap(authResponse => {
-              this.auth.saveToken(authResponse.token);
-              const { userId } = decodeJwt(authResponse.token) as ExtendedJwtPayload;
-              return this.userService.findById(userId).pipe(
-                map(userResponse => ({
-                  isAuthenticated: true,
-                  token: authResponse.token,
-                  user: userResponse.payload,
-                })),
-              );
-            }),
-          );
-        }
-        if (action instanceof CreateAccountAction) {
-          return this.auth.createAccount(action.body).pipe(
-            switchMap(authResponse => {
-              this.auth.saveToken(authResponse.token);
-              const { userId } = decodeJwt(authResponse.token) as ExtendedJwtPayload;
-              return this.userService.findById(userId).pipe(
-                map(userResponse => ({
-                  isAuthenticated: true,
-                  token: authResponse.token,
-                  user: userResponse.payload,
-                })),
-              );
-            }),
-          );
-        }
-        if (action instanceof LogoutAction) {
-          this.auth.removeToken();
-          return of(initialState);
-        }
-        return of(null);
-      }),
-      tap(v => console.log(v)),
-      catchError(e => {
-        console.log(e);
-        return of(initialState);
-      }),
-    ).subscribe({
-      next: state => this.authState.next(state),
-      error: e => this.authState.next(initialState),
-    });
-  }
-
+          }),
+        );
+      }
+      if (action instanceof CreateAccountAction) {
+        return this.authService.createAccount(action.body).pipe(
+          switchMap(authResponse => {
+            this.storage.set('token', authResponse.token);
+            const { userId } = decodeJwt(authResponse.token) as ExtendedJwtPayload;
+            return this.userService.findById(userId).pipe(
+              map(userResponse => ({
+                isAuthenticated: true,
+                token: authResponse.token,
+                user: userResponse.payload,
+              })),
+            );
+          }),
+        );
+      }
+      if (action instanceof LogoutAction) {
+        this.storage.remove('token');
+      }
+      return of(initialState);
+    }),
+    catchError(e => {
+      console.log(e);
+      return of(initialState);
+    }),
+  );
+    
   dispatch(action: AuthAction) {
     this.actions.next(action);
-  }
-
-  snapshot(): AuthState {
-    return this.authState.getValue();
   }
 
 }

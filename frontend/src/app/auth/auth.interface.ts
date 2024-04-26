@@ -1,6 +1,18 @@
-import { JwtPayload } from 'jsonwebtoken';
+import { JWTPayload } from 'jose';
 import { Address } from "../types/address.interface";
 import { User } from "../types/user.interface";
+
+export interface AuthState {
+  user: User;
+  isAuthenticated: boolean;
+  token: string;
+}
+
+export const initialState: AuthState = {
+  isAuthenticated: false,
+  user: null,
+  token: null,
+};
 
 export interface LoginRequestBody {
   email: string;
@@ -17,6 +29,6 @@ export interface AuthResponse {
   token: string | null;
 }
 
-export interface ExtendedJwtPayload extends JwtPayload {
+export interface ExtendedJwtPayload extends JWTPayload {
   userId: User['id'];
 }

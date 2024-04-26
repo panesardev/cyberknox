@@ -14,6 +14,6 @@ import { AuthStore } from '../../auth/auth.store';
 export default class IndexComponent {
   private auth = inject(AuthStore);
 
-  authState$ = this.auth.authState$;
+  authState$ = this.auth.state$;
 
 }

@@ -1,10 +1,10 @@
 import { HttpHandlerFn, HttpInterceptorFn, HttpRequest } from "@angular/common/http";
 import { inject } from "@angular/core";
-import { AuthService } from "./auth.service";
+import { StorageService } from "../services/storage.service";
 
 export const AuthInterceptor: HttpInterceptorFn = (request: HttpRequest<any>, next: HttpHandlerFn) => {
-  const auth = inject(AuthService);
-  const token = auth.getToken();
+  const storage = inject(StorageService);
+  const token = storage.get('token');
 
   if (token) {
     request = request.clone({

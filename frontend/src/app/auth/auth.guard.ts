@@ -5,10 +5,10 @@ import { AuthStore } from "./auth.store";
 
 export function isAuthenticated(): CanActivateFn {
   return () => {
-    const authStore = inject(AuthStore);
+    const auth = inject(AuthStore);
     const router = inject(Router);
   
-    return authStore.authState$.pipe(
+    return auth.state$.pipe(
       take(1),
       map(state => {
         if (state && state.isAuthenticated) {

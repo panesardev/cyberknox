@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { BaseModalComponent } from './base.modal.component';
 import { RouterLink } from '@angular/router';
-import { Modal } from './modal.class';
+import { Modal } from '../../types/modal.class';
 
 @Component({
   selector: 'app-nav',
